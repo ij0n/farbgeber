@@ -14,10 +14,10 @@ def generate_terminal_output(base_color, base_color_variant_1, base_color_varian
                              base_color_variant_4, contrast_color, time_value):
     print time_value
     print "base_color ", base_color.hex
-    print "baseColorVariant1 ", base_color_variant_1
-    print "baseColorVariant2 ", base_color_variant_2
-    print "baseColorVariant3 ", base_color_variant_3
-    print "baseColorVariant4 ", base_color_variant_4
+    print "baseColorVariant1 ", base_color_variant_1.hex
+    print "baseColorVariant2 ", base_color_variant_2.hex
+    print "baseColorVariant3 ", base_color_variant_3.hex
+    print "baseColorVariant4 ", base_color_variant_4.hex
     print "contrast_color ", contrast_color.hex
     print "###################################"
 
