@@ -9,17 +9,10 @@ from colour import Color
 # zentraler zeitgeber, sollte immer <3600 und >0 sein und integer raustun
 
 
-def generate_html_palette():
+def generate_html_palette(timevalue=0.0, baseSaturation=1.0, baseLuminance=0.4, huemodifier=0.03, lummodifier=0.07,
+                          satmodifier=0.2, programmcycles=0):
 
     print "zentrale Farbgebeeinheit"
-
-    timevalue = 0.0
-    baseSaturation = 1.0
-    baseLuminance = 0.4
-    huemodifier = 0.03
-    lummodifier = 0.07
-    satmodifier = 0.2
-    programmcycles = 0
 
     while programmcycles < 3600:
 
