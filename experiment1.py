@@ -11,7 +11,6 @@ from colour import Color
 
 def generate_html_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.4, hue_modifier=0.03, lum_modifier=0.07,
                           sat_modifier=0.2, program_cycles=0):
-
     print "zentrale Farbgebeeinheit"
 
     while program_cycles < 3600:
@@ -82,6 +81,6 @@ def generate_html_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.
         program_cycles += 1
         time.sleep(1)
 
+
 if __name__ == "__main__":
     generate_html_palette()
-
