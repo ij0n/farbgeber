@@ -2,12 +2,22 @@
 # coding=utf-8
 
 import time
+import paho.mqtt.client as mqtt
 from time import gmtime, strftime
-
 from colour import Color
 
 
 # zentraler zeitgeber, sollte immer <3600 und >0 sein und integer raustun
+
+def init_mqtt(broker_address, client_id, topic, port):
+  broker_address = 'broker.mqttdashboard.com'
+  port = 8000
+  client_id = 'farbgeber'
+  topic = 'c-base/farbgeber'
+
+  mc = mqtt.Client(client_id)
+  mc.connect(broker_address, port)
+
 
 
 def generate_terminal_output(base_color, base_color_variant_1, base_color_variant_2, base_color_variant_3,
@@ -49,7 +59,6 @@ def generate_html_output(base_color, base_color_variant_1, base_color_variant_2,
     f.write(outputtxt)
     f.close()
 
-
 def generate_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.4, hue_modifier=0.03, lum_modifier=0.07,
                      sat_modifier=0.2, program_cycles=0, output='html'):
     print "zentrale Farbgebeeinheit"
@@ -88,6 +97,9 @@ def generate_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.4, hu
         elif output == 'html':
             generate_html_output(base_color, base_color_variant_1, base_color_variant_2, base_color_variant_3,
                                  base_color_variant_4, contrast_color, time_value)
+
+        # publish on MQTT broker:
+
 
         program_cycles += 1
         time.sleep(1)
