@@ -21,4 +21,5 @@ Der Farbgeber ist ein Farb-Inklusionist und achtet darauf dass ALLE Farben des R
 
 needs: python2
 
+```virtualenv -p /usr/bin/python2.7 venv```
 ```pip install -r requirements.txt```
