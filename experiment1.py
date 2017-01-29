@@ -9,19 +9,27 @@ from colour import Color
 
 # zentraler zeitgeber, sollte immer <3600 und >0 sein und integer raustun
 
-def init_mqtt(broker_address, client_id, topic, port):
-  broker_address = 'broker.mqttdashboard.com'
-  port = 8000
-  client_id = 'farbgeber'
-  topic = 'c-base/farbgeber'
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, rc):
+    print("Connected with result code " + str(rc))
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    # client.subscribe("c-base/#")
+    client.subscribe("c-base/#")
 
+    # The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    print(msg.topic + " " + str(msg.payload))
+
+def create_mqtt_publisher(broker_address, port, client_id, topic):
   mc = mqtt.Client(client_id)
+  mc.on_connect = on_connect
+  mc.on_message = on_message
   mc.connect(broker_address, port)
 
+  return mc
 
-
-def generate_terminal_output(base_color, base_color_variant_1, base_color_variant_2, base_color_variant_3,
-                             base_color_variant_4, contrast_color, time_value):
+def generate_terminal_output(base_color, base_color_variant_1, base_color_variant_2, base_color_variant_3, base_color_variant_4, contrast_color, time_value):
     print time_value
     print "base_color ", base_color.hex
     print "baseColorVariant1 ", base_color_variant_1.hex
@@ -63,8 +71,17 @@ def generate_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.4, hu
                      sat_modifier=0.2, program_cycles=0, output='html'):
     print "zentrale Farbgebeeinheit"
 
-    while program_cycles < 3600:
+    broker_address = 'iot.eclipse.org'
+    port = 1883
+    client_id = 'farbgeber'
+    topic = 'c-base/farbgeber'
 
+    print "connecting to mqtt broker: %s:%d @ topic %s" % (broker_address,
+            port, topic)
+
+    mc = create_mqtt_publisher(broker_address, port, client_id, topic)
+
+    while True:
         time_value = int(strftime("%M", gmtime())) * 60 + int(strftime("%S", gmtime()))
         time_value = float(time_value)
 
@@ -99,9 +116,14 @@ def generate_palette(time_value=0.0, base_saturation=1.0, base_luminance=0.4, hu
                                  base_color_variant_4, contrast_color, time_value)
 
         # publish on MQTT broker:
+        mc.publish(topic, "color/base/0/%s" % base_color.hex)
+        mc.publish(topic, "color/base/1/%s" % base_color_variant_1.hex)
+        mc.publish(topic, "color/base/2/%s" % base_color_variant_2.hex)
+        mc.publish(topic, "color/base/3/%s" % base_color_variant_3.hex)
+        mc.publish(topic, "color/base/4/%s" % base_color_variant_4.hex)
+        mc.publish(topic, "color/contrast/%s" % contrast_color.hex)
 
-
-        program_cycles += 1
+        program_cycles += + 1
         time.sleep(1)
 
 
